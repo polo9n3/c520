@@ -143,6 +143,8 @@ void kartenErstellen(void){
 				karte[3][3]='+';
 			}
 		
+		//Stadt
+		
 		if(code[0] == '2'){
 				karte[1][1]='x';
 				karte[2][2]='x';
