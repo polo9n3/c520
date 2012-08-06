@@ -13,7 +13,7 @@
 void kartenErstellen(void);
 
 /***********************************************************************
- * 		Variablendeklaration Global			       *					   *
+ * 		Variablendeklaration Global			       					   *
  **********************************************************************/
 	char startwert[] = "123456789";
 	int anzahl = 5;
@@ -152,6 +152,7 @@ void kartenErstellen(void){
 				karte[4][2]='x';
 				karte[5][1]='x';
 			}
+			
 		if(code[1] == '2'){
 			if(karte[5][1] == 'x'){
 				karte[5][1] = ' ';
@@ -166,6 +167,7 @@ void kartenErstellen(void){
 			karte[5][5]='x';
 
 			}
+			
 		if(code[2] == '2'){
 			if(karte[5][5] == 'x'){
 				karte[5][5] = ' ';
@@ -179,6 +181,7 @@ void kartenErstellen(void){
 			karte[2][4]='x';
 			karte[1][5]='x';
 			}
+			
 		if(code[3] == '2'){
 			if(karte[1][5] == 'x'){
 				karte[1][5] = ' ';
