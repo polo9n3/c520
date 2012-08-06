@@ -23,9 +23,7 @@ void kartenErstellen(void);
 
 int main(int argc, char **argv)
 {
-
-	
-   if (argc > 5){
+	if (argc > 5){
 	   printf("Es wurden zu viele Parameter übergeben.\n");
 	   return 1;
 	}
@@ -34,6 +32,18 @@ int main(int argc, char **argv)
 			printf("argv[%d] = %s", i, argv[i]);
 			printf("\n");
 		}
+		
+		if (strcmp(argv[1], "creation") == 0 && strlen(startwert) == 9){
+			printf("creation\n");
+	   
+			kartenErstellen();
+
+	      
+		}
+		else if (strcmp(argv[1], "play") == 0) {
+			//Andernfalls...
+		}
+		
 	}
    
 /*
@@ -41,17 +51,7 @@ int main(int argc, char **argv)
  */
 
    
-   if (strcmp(argv[1], "creation") == 0 && strlen(startwert) == 9){
-	   printf("creation\n");
-	   
-	  
-	  kartenErstellen();
-
-	      
-   }
-   else if (strcmp(argv[1], "play") == 0) {
-	   
-   }
+   
 	return 0;
 }
 
