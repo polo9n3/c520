@@ -13,7 +13,7 @@
 void kartenErstellen(void);
 
 /***********************************************************************
- * 		Variablendeklaration Global									   *
+ * 		Variablendeklaration Global			       *					   *
  **********************************************************************/
 	char startwert[] = "123456789";
 	int anzahl = 5;
