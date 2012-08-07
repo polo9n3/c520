@@ -11,6 +11,7 @@
 #include <ctype.h>
 
 void kartenErstellen(void);
+void spielen(void);
 
 /***********************************************************************
  * 		Variablendeklaration Global			       					   *
@@ -20,8 +21,8 @@ void kartenErstellen(void);
 	char *file;
 	int i,j,k;
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
+	
 	if (argc > 5){
 	   printf("Es wurden zu viele Parameter übergeben.\n");
 	   return 1;
@@ -81,6 +82,7 @@ int main(int argc, char **argv)
 						file[i] = argv[2][i];
 					}
 					//play
+					spielen();
 					
 				}else{
 					
@@ -95,8 +97,6 @@ int main(int argc, char **argv)
 			//Keine Parameter übergeben
 			printf("Es wurden keine Parameter übergeben!\n");
 			return 1;
-			
-		}
 		
 	}
    
@@ -269,4 +269,32 @@ void kartenErstellen(void){
 	
 	free(p);
 	
+}
+/***********************************************************************
+ * 				Das Spiel
+ **********************************************************************/
+
+void spielen(void){
+	FILE *eingabe;
+	char *p = malloc(anzahl * sizeof(int)); 
+	char code[4];
+	
+	eingabe = fopen(file, "r");
+	
+	for (i=0; i<anzahl; i++){
+		 fseek(eingabe,(long) 5+i*66, SEEK_SET);
+		 
+		 for (j=0; j<4; j++){
+			 code[j] = getc(eingabe);
+		 }
+		 
+		 p[i]= atoi(code);
+		 printf("Code: %i\n", p[i]);
+
+		// for (j=0; j<49; j++){
+			 
+		// }
+	}
+	
+	free(p);
 }
