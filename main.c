@@ -21,8 +21,8 @@ void kartenErstellen(void);
 	//char option[] = "creation";	wird nicht mehr gebruacht, da bereits als Parameter übergeben werden kann.
 	int i,j,k;
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
+	
 	if (argc > 5){
 	   printf("Es wurden zu viele Parameter übergeben.\n");
 	   return 1;
@@ -41,7 +41,9 @@ int main(int argc, char **argv)
 	      
 		}
 		else if (strcmp(argv[1], "play") == 0) {
-			//Andernfalls...
+			printf("play\n");
+			
+			spielen();
 		}
 		
 	}
@@ -219,4 +221,11 @@ void kartenErstellen(void){
 	
 	
 	free(p);
+}
+/***********************************************************************
+ * 				Das Spiel
+ **********************************************************************/
+
+void spielen(void){
+	
 }
