@@ -16,10 +16,9 @@ void spielen(void);
 /***********************************************************************
  * 		Variablendeklaration Global			       					   *
  **********************************************************************/
-	char startwert[] = "123456789";
-	int anzahl = 5;
-	char file[] = "test.txt";
-	//char option[] = "creation";	wird nicht mehr gebruacht, da bereits als Parameter übergeben werden kann.
+	char *startwert;
+	int anzahl;
+	char *file;
 	int i,j,k;
 
 int main(int argc, char **argv){
@@ -29,23 +28,75 @@ int main(int argc, char **argv){
 	   return 1;
 	}
 	else {
-		for(i=0; i < argc; i++) {
-			printf("argv[%d] = %s", i, argv[i]);
-			printf("\n");
-		}
-		
-		if (strcmp(argv[1], "creation") == 0 && strlen(startwert) == 9){
-			printf("creation\n");
-	   
-			kartenErstellen();
-
-	      
-		}
-		else if (strcmp(argv[1], "play") == 0) {
-			printf("play\n");
+		if(argc > 1){
 			
-			spielen();
-		}
+			for(i=0; i < argc; i++) {
+				printf("argv[%d] = %s", i, argv[i]);
+				printf("\n");
+			}
+
+			if(strcmp(argv[1], "creation") == 0){
+			
+				if(argc == 5){
+					
+					//Prüfe, ob der Key genau 9 Zeichen hat
+					if(strlen(argv[3]) == 9){
+						//Lese Parameter ein
+						
+						//file[] = argv[2]
+						file = malloc(sizeof(char[strlen(argv[2])]));
+						for(i=0; i < strlen(argv[2]); i++){
+							file[i] = argv[2][i];
+						}
+						
+						//startwert[] = argv[3];
+						startwert = malloc(sizeof(char[strlen(argv[3])]));
+						for(j=0; j < strlen(argv[3]); j++){
+							startwert[j] = argv[3][j];
+						}
+						anzahl		= atoi(argv[4]);
+						printf("Argumente erfolgreich eingelesen!\n");
+						
+						//Erstelle Karten
+						kartenErstellen();	
+						
+					}else{
+						
+						printf("Der übergeben Key hatte nicht genau 9 Zeichen!\n");
+						
+					}
+				
+				}else{
+					
+					printf("Für die Funktion 'creation' werden insgesamt 4 Parameter benötigt!\n");
+					
+				}
+			
+			}else if(strcmp(argv[1], "play") == 0){
+				
+				if(argc == 3){
+					//Lese Parameter ein
+					//file[]	= argv[2];
+					file = malloc(sizeof(char[strlen(argv[2])]));
+					for(i=0; i < strlen(argv[2]); i++){
+						file[i] = argv[2][i];
+					}
+					//play
+					spielen();
+					
+				}else{
+					
+					printf("Für die Funktion 'play' werden genau 2 Parameter benötigt!\n");
+					
+				}
+				
+			}
+			
+		}else{
+			
+			//Keine Parameter übergeben
+			printf("Es wurden keine Parameter übergeben!\n");
+			return 1;
 		
 	}
    
@@ -53,9 +104,11 @@ int main(int argc, char **argv){
  * Karten erstellen
  */
 
-   
+   free(file);
+   free(startwert);
    
 	return 0;
+}
 }
 
 /***********************************************************************
@@ -69,14 +122,12 @@ void kartenErstellen(void){
 	char kette[schluesselgroesse];
 	FILE *ausgabe;
 	int karte[7][7];
-	
-
 	for (i=0; i<schluesselgroesse; i++){
 		kette[i] = startwert[i%9];
 	}
-	//printf("Kette = %s\n", kette);
-	
+
 	for (i=0; i<schluesselgroesse; i++){
+		
 			if (kette[i] == '0' || kette[i] == '1' || kette[i] == '2'){
 				p[i]='0';
 			}
@@ -87,16 +138,12 @@ void kartenErstellen(void){
 				p[i]='2';
 			}
 			
-		//printf("Stack: %c\n", p[i]);
-		
-		
 	}
-	
+
 		ausgabe = fopen (file, "w");
 		if (ausgabe == NULL){
 			printf("Fehler beim öffnen der Datei.\n");
 		}
-
 
 		
 	for (i=0; i<schluesselgroesse; i+=4){
@@ -222,6 +269,7 @@ void kartenErstellen(void){
 	
 	
 	free(p);
+	
 }
 /***********************************************************************
  * 				Das Spiel
@@ -244,12 +292,6 @@ void spielen(void){
 			 
 			 printf("Code: %s\n", code);
 
-	}
-	
-	
-	
-	for (i=0; i<anzahl*4; i++){
-		
 	}
 	
 	free(p);
