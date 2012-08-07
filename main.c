@@ -229,7 +229,7 @@ void kartenErstellen(void){
 
 void spielen(void){
 	FILE *eingabe;
-	char *p = malloc(anzahl * sizeof(int)); 
+	char *p = malloc(anzahl * 4 * sizeof(int)); 
 	char code[4];
 	
 	eingabe = fopen(file, "r");
@@ -237,16 +237,19 @@ void spielen(void){
 	for (i=0; i<anzahl; i++){
 		 fseek(eingabe,(long) 5+i*66, SEEK_SET);
 		 
-		 for (j=0; j<4; j++){
-			 code[j] = getc(eingabe);
-		 }
-		 
-		 p[i]= atoi(code);
-		 printf("Code: %i\n", p[i]);
-
-		// for (j=0; j<49; j++){
+			 code[0] = getc(eingabe);
+			 code[1] = getc(eingabe);
+			 code[2] = getc(eingabe);
+			 code[3] = getc(eingabe);
 			 
-		// }
+			 printf("Code: %s\n", code);
+
+	}
+	
+	
+	
+	for (i=0; i<anzahl*4; i++){
+		
 	}
 	
 	free(p);
