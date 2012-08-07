@@ -11,7 +11,7 @@
 #include <ctype.h>
 
 void kartenErstellen(void);
-void spielen(void);
+void spielen(char datei[]);
 
 /***********************************************************************
  * 		Variablendeklaration Global			       					   *
@@ -82,7 +82,7 @@ int main(int argc, char **argv){
 						file[i] = argv[2][i];
 					}
 					//play
-					spielen();
+					spielen(file);
 					
 				}else{
 					
@@ -275,12 +275,23 @@ void kartenErstellen(void){
  * 				Das Spiel
  **********************************************************************/
 
-void spielen(void){
+void spielen(char datei[]){
 	FILE *eingabe;
 	char *p = malloc(anzahl * 4 * sizeof(int)); 
 	char code[4];
 	
-	eingabe = fopen(file, "r");
+	eingabe = fopen(datei, "r");
+	
+	char c;
+	int zeilenanzahl=1;
+	while ((c=getc(eingabe))!=EOF)
+	if (c=='\n') {zeilenanzahl++;}
+		printf("%d\n",  zeilenanzahl);
+	
+	anzahl = (int)zeilenanzahl/8;
+	
+	printf("%i\n", anzahl);
+	
 	
 	for (i=0; i<anzahl; i++){
 		 fseek(eingabe,(long) 5+i*66, SEEK_SET);
