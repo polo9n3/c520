@@ -335,7 +335,7 @@ void spielen(char datei[]){
 	}
 	for (i=0; i<anzahl; i++){
 		p = pop();
-		printf("%s\n", p->code);
+		//printf("%s\n", p->code);
 	}
 
 }
@@ -345,17 +345,17 @@ void push(char *co, char *bi)
 	if (anfang == NULL){
 		anfang = (KARTE *) malloc(sizeof(KARTE));
 		pos = anfang;
-		(*pos).next = NULL;
+		pos->next = NULL;
 	}else{
 		next = pos;
 		pos = (KARTE *) malloc(sizeof(KARTE));
-		(*pos).next = next;
+		pos->next = next;
 	}
 	if (pos == NULL) {
 		fprintf(stderr, "Kein Speicherplatz vorhanden für neues Element\n");
 	}
 	strcpy(pos->code, co);
-	printf("Neu in der Liste:%s\n", pos->code);
+	//printf("Neu in der Liste:%s\n", pos->code);
 	strcpy(pos->bild, bi);
 	//printf("Neu in der Liste:\n%s\n", pos->bild);
 }
@@ -371,7 +371,7 @@ KARTE * pop(void)
 	}else{
 		temp = pos;
 		free(pos);
-		pos = (*temp).next;
+		pos = temp->next;
 		return temp;
 	}
 }
