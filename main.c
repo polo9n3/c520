@@ -10,10 +10,16 @@
 #include <string.h>
 #include <ctype.h>
 
+typedef struct stack {
+    int data;
+    struct stack *next;
+} STACK;
+
 void kartenErstellen(void);
 void spielen(char datei[]);
-void push(STACK *ps, int x);
-int pop(STACK *ps);
+void push(STACK **head, int value);
+int pop(STACK **head);
+
 
 /***********************************************************************
  * 		Variablendeklaration Global			       					   *
@@ -310,25 +316,30 @@ void spielen(char datei[]){
 	free(p);
 }
 
-typedef struct {
-    size_t size;
-    int items[STACKSIZE];
-} STACK;
-
-void push(STACK *ps, int x)
+void push(STACK **head, int value)
 {
-    if (ps->size == STACKSIZE) {
-        fputs("Error: stack overflow\n", stderr);
+    STACK *node = malloc(sizeof(STACK));  /* create a new node */
+ 
+    if (node == NULL){
+        fputs("Error: no space available for node\n", stderr);
         abort();
-    } else
-        ps->items[ps->size++] = x;
+    } else {                                      /* initialize node */
+        node->data = value;
+        node->next = empty(*head) ? NULL : *head; /* insert new head if any */
+        *head = node;
+    }
 }
 
-int pop(STACK *ps)
+int pop(STACK **head)
 {
-    if (ps->size == 0){
-        fputs("Error: stack underflow\n", stderr);
-        abort();
-    } else
-        return ps->items[--ps->size];
+    if (empty(*head)) {                          /* stack is empty */
+       fputs("Error: stack underflow\n", stderr);
+       abort();
+    } else {                                     //pop a node 
+        STACK *top = *head;
+        int value = top->data;
+        *head = top->next;
+        free(top);
+        return value;
+    }
 }
