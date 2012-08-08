@@ -37,7 +37,6 @@ KARTE * pop(void);
 	int i,j,k;
 	KARTE *pos = NULL;
 	KARTE *next = NULL;
-	KARTE *previous = NULL;
 	KARTE *anfang = NULL;
 
 
@@ -300,7 +299,6 @@ void spielen(char datei[]){
 	FILE *eingabe;
 	char code[4];
 	char bild[56];
-	KARTE *p = malloc(sizeof(KARTE));
 	
 	eingabe = fopen(datei, "r");
 	
@@ -310,6 +308,8 @@ void spielen(char datei[]){
 	if (c=='\n') {zeilenanzahl++;}
 	
 	anzahl = (int)zeilenanzahl/8;
+	
+	KARTE *p = malloc(anzahl*sizeof(KARTE));
 	
 	
 	for (i=0; i<anzahl; i++){
@@ -332,14 +332,14 @@ void spielen(char datei[]){
 			 
 			 
 	}
-	for (i=0; i<anzahl; i++){
+	/*for (i=0; i<anzahl; i++){
 		p = pop();
 		printf("%s\n", p->code);
-	}
+	}*/
 
-	
 }
 
+/*
 void push(char *co, char *bi)
 {
 	if (anfang == NULL){
@@ -347,7 +347,7 @@ void push(char *co, char *bi)
 		pos = anfang;
 	}else{
 		for( pos=anfang; (*pos).next != NULL; pos=(*pos).next)
-		;/* leerer Schleifenrumpf */
+		;// leerer Schleifenrumpf
 			previous = pos;
 			(*pos).next = (KARTE *) malloc(sizeof (KARTE));
 			pos=(*pos).next;
@@ -365,7 +365,8 @@ void push(char *co, char *bi)
 	//printf("Neu in der Liste:%s\n", pos->code);
 
 }
-
+*/
+/*
 KARTE * pop(void)
 {
 	KARTE * temp = NULL;
@@ -375,9 +376,27 @@ KARTE * pop(void)
 		printf("Die Liste ist Leer");
 	}else{
 		temp = pos;
-		return temp;
 		free(pos);
-		pos = previous;
-		
+		pos = next;
+		return temp;
 	}
+}
+*/
+
+void push(char *co, char *bi)
+{
+	if (anfang == NULL){
+		anfang = (KARTE *) malloc(sizeof(KARTE));
+		pos = anfang;
+	}else{
+		next = pos;
+		pos = (KARTE *) malloc(sizeof(KARTE));
+	}
+	if (pos == NULL) {
+		fprintf(stderr, "Kein Speicherplatz vorhanden für neues Element\n");
+	}
+	strcpy(pos->code, co);
+	//printf("Neu in der Liste:%s\n", pos->code);
+	strcpy(pos->bild, bi);
+	//printf("Neu in der Liste:\n%s\n", pos->bild);
 }
