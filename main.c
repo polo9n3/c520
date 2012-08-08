@@ -10,15 +10,21 @@
 #include <string.h>
 #include <ctype.h>
 
-typedef struct stack {
-    int data;
-    struct stack *next;
-} STACK;
+/***********************************************************************
+ * 			Typdeklaration
+ **********************************************************************/
+
+typedef struct karte {
+	char code[4];
+	char bild[56];
+	struct karte * next;
+} KARTE;
+
 
 void kartenErstellen(void);
 void spielen(char datei[]);
-void push(STACK **head, int value);
-int pop(STACK **head);
+void push(char *co, char *bi);
+KARTE * pop(void);
 
 
 /***********************************************************************
@@ -28,6 +34,11 @@ int pop(STACK **head);
 	int anzahl;
 	char *file;
 	int i,j,k;
+	KARTE *pos = NULL;
+	KARTE *next = NULL;
+	KARTE *anfang = NULL;
+
+
 
 int main(int argc, char **argv){
 	
@@ -285,8 +296,9 @@ void kartenErstellen(void){
 
 void spielen(char datei[]){
 	FILE *eingabe;
-	char *p = malloc(anzahl * 4 * sizeof(int)); 
 	char code[4];
+	char bild[56];
+	KARTE *p = malloc(sizeof(KARTE));
 	
 	eingabe = fopen(datei, "r");
 	
@@ -294,11 +306,8 @@ void spielen(char datei[]){
 	int zeilenanzahl=1;
 	while ((c=getc(eingabe))!=EOF)
 	if (c=='\n') {zeilenanzahl++;}
-		printf("%d\n",  zeilenanzahl);
 	
 	anzahl = (int)zeilenanzahl/8;
-	
-	printf("%i\n", anzahl);
 	
 	
 	for (i=0; i<anzahl; i++){
@@ -309,37 +318,59 @@ void spielen(char datei[]){
 			 code[2] = getc(eingabe);
 			 code[3] = getc(eingabe);
 			 
-			 printf("Code: %s\n", code);
-
+			 
+			 fseek(eingabe,(long) 10+i*66, SEEK_SET);
+			 
+			 for (j=0; j<55; j++){
+				bild[j] = getc(eingabe);
+			 }
+			 
+			 //printf("%s\n%s\n", code, bild);
+			 push(code, bild);
+			 
+			 
 	}
+	for (i=0; i<anzahl; i++){
+		//p = pop();
+		//printf("%s\n%s", p->code, p->bild);
+	}
+
 	
-	free(p);
 }
 
-void push(STACK **head, int value)
+void push(char *co, char *bi)
 {
-    STACK *node = malloc(sizeof(STACK));  /* create a new node */
- 
-    if (node == NULL){
-        fputs("Error: no space available for node\n", stderr);
-        abort();
-    } else {                                      /* initialize node */
-        node->data = value;
-        node->next = empty(*head) ? NULL : *head; /* insert new head if any */
-        *head = node;
-    }
+	if (anfang == NULL){
+		anfang = (KARTE *) malloc(sizeof(KARTE));
+		pos = anfang;
+	}else{
+		for( pos=anfang; (*pos).next != NULL; pos=(*pos).next)
+		;/* leerer Schleifenrumpf */
+			(*pos).next = (KARTE *) malloc(sizeof (KARTE));
+			pos=(*pos).next;
+	}
+	if (pos == NULL) {
+		fprintf(stderr, "Kein Speicherplatz vorhanden für neues Element\n");
+	}
+	printf("%s", co);
+	strcpy(pos->code, co);
+	strcpy(pos->bild, bi);
+
+
+	printf("Neu in der Liste:%s\n", pos->code);
+
 }
 
-int pop(STACK **head)
+KARTE * pop(void)
 {
-    if (empty(*head)) {                          /* stack is empty */
-       fputs("Error: stack underflow\n", stderr);
-       abort();
-    } else {                                     //pop a node 
-        STACK *top = *head;
-        int value = top->data;
-        *head = top->next;
-        free(top);
-        return value;
-    }
+	printf("Hole eine karte vom Stack\n");
+	
+    if (anfang == NULL){
+		printf("Die Liste ist Leer");
+	}else{
+		return pos;
+		free(pos);
+		pos = (*pos).next;
+		next = (*next).next;
+	}
 }
