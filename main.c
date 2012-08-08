@@ -18,6 +18,7 @@ typedef struct karte {
 	char code[4];
 	char bild[56];
 	struct karte * next;
+	struct karte * previous;
 } KARTE;
 
 
@@ -36,6 +37,7 @@ KARTE * pop(void);
 	int i,j,k;
 	KARTE *pos = NULL;
 	KARTE *next = NULL;
+	KARTE *previous = NULL;
 	KARTE *anfang = NULL;
 
 
@@ -331,8 +333,8 @@ void spielen(char datei[]){
 			 
 	}
 	for (i=0; i<anzahl; i++){
-		//p = pop();
-		//printf("%s\n%s", p->code, p->bild);
+		p = pop();
+		printf("%s\n", p->code);
 	}
 
 	
@@ -346,31 +348,36 @@ void push(char *co, char *bi)
 	}else{
 		for( pos=anfang; (*pos).next != NULL; pos=(*pos).next)
 		;/* leerer Schleifenrumpf */
+			previous = pos;
 			(*pos).next = (KARTE *) malloc(sizeof (KARTE));
 			pos=(*pos).next;
 	}
 	if (pos == NULL) {
 		fprintf(stderr, "Kein Speicherplatz vorhanden für neues Element\n");
 	}
-	printf("%s", co);
+	
 	strcpy(pos->code, co);
+	//printf("Neu in der Liste:%s\n", pos->code);
 	strcpy(pos->bild, bi);
+	//printf("Neu in der Liste:\n%s\n", pos->bild);
 
 
-	printf("Neu in der Liste:%s\n", pos->code);
+	//printf("Neu in der Liste:%s\n", pos->code);
 
 }
 
 KARTE * pop(void)
 {
-	printf("Hole eine karte vom Stack\n");
+	KARTE * temp = NULL;
+	//printf("Hole eine karte vom Stack\n");
 	
     if (anfang == NULL){
 		printf("Die Liste ist Leer");
 	}else{
-		return pos;
+		temp = pos;
+		return temp;
 		free(pos);
-		pos = (*pos).next;
-		next = (*next).next;
+		pos = previous;
+		
 	}
 }
