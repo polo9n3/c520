@@ -28,6 +28,7 @@ int pop(STACK **head);
 	int anzahl;
 	char *file;
 	int i,j,k;
+	int spielfeld[][];
 
 int main(int argc, char **argv){
 	
@@ -332,7 +333,7 @@ void push(STACK **head, int value)
 
 int pop(STACK **head)
 {
-    if (empty(*head)) {                          /* stack is empty */
+    if (empty(*head) == 0) {                          /* stack is empty */
        fputs("Error: stack underflow\n", stderr);
        abort();
     } else {                                     //pop a node 
@@ -342,4 +343,14 @@ int pop(STACK **head)
         free(top);
         return value;
     }
+    
+int empty(STACK **head){
+
+	if(*head != NULL){
+		return 1;	
+	}else{
+		return 0;
+	}
+
+}
 }
