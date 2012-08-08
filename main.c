@@ -12,6 +12,8 @@
 
 void kartenErstellen(void);
 void spielen(char datei[]);
+void push(STACK *ps, int x);
+int pop(STACK *ps);
 
 /***********************************************************************
  * 		Variablendeklaration Global			       					   *
@@ -306,4 +308,27 @@ void spielen(char datei[]){
 	}
 	
 	free(p);
+}
+
+typedef struct {
+    size_t size;
+    int items[STACKSIZE];
+} STACK;
+
+void push(STACK *ps, int x)
+{
+    if (ps->size == STACKSIZE) {
+        fputs("Error: stack overflow\n", stderr);
+        abort();
+    } else
+        ps->items[ps->size++] = x;
+}
+
+int pop(STACK *ps)
+{
+    if (ps->size == 0){
+        fputs("Error: stack underflow\n", stderr);
+        abort();
+    } else
+        return ps->items[--ps->size];
 }
