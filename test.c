@@ -80,8 +80,110 @@ void zeichneSpielfeld(void)
 {
 	/*
 	 * Hier wird dann das Spielfeld gezeichnet
-	 * */
-	 spielfeld[4][6] = "2135";
+	 */
+	 int i=0;
+	 int j=0;
+	 int k=0;
+	 int l=0;
+	 char karte[7][7];
+	 
+	 //spielfeld[4][6] = "2135";
+	 
+	 printf("%i,%i", x_size, y_size);
+	 
+	 for (i=0; i<(x_size-1); i++){
+		 for (j=0; j<(y_size-1); j++){
+			 
+			 //Straße
+			 
+			 if(spielfeld[i][j][0] == '1'){
+				karte[3][1]='+';
+				karte[3][2]='+';
+				karte[3][3]='+';
+			}
+			if(spielfeld[i][j][1] == '1'){
+				karte[5][3]='+';
+				karte[4][3]='+';
+				karte[3][3]='+';
+			}
+			if(spielfeld[i][j][2] == '1'){
+				karte[3][5]='+';
+				karte[3][4]='+';
+				karte[3][3]='+';
+			}
+			if(spielfeld[i][j][3] == '1'){
+				karte[1][3]='+';
+				karte[2][3]='+';
+				karte[3][3]='+';
+			}
+			
+			//Stadt
+			
+			if(spielfeld[i][j][0] == '2'){
+				karte[1][1]='x';
+				karte[2][2]='x';
+				karte[3][2]='x';
+				karte[4][2]='x';
+				karte[5][1]='x';
+			}
+			
+		if(spielfeld[i][j][1] == '2'){
+			if(karte[5][1] == 'x'){
+				karte[5][1] = ' ';
+			}else karte[5][1] = 'x';
+			
+			if(karte[4][2] == 'x'){
+				karte[4][2] = ' ';
+			}else karte[4][2] = 'x';
+			
+			karte[4][3]='x';
+			karte[4][4]='x';
+			karte[5][5]='x';
+
+			}
+			
+		if(spielfeld[i][j][2] == '2'){
+			if(karte[5][5] == 'x'){
+				karte[5][5] = ' ';
+			}else karte[5][5] = 'x';
+			
+			if(karte[4][4] == 'x'){
+				karte[4][4] = ' ';
+			}else karte[4][4] = 'x';
+			
+			karte[3][4]='x';
+			karte[2][4]='x';
+			karte[1][5]='x';
+			}
+			
+		if(spielfeld[i][j][3] == '2'){
+			if(karte[1][5] == 'x'){
+				karte[1][5] = ' ';
+			}else karte[1][5] = 'x';
+			
+			if(karte[2][4] == 'x'){
+				karte[2][4] = ' ';
+			}else karte[2][4] = 'x';
+			
+			if(karte[1][1] == 'x'){
+				karte[1][1] = ' ';
+			}else karte[1][1] = 'x';
+			
+			if(karte[2][2] == 'x'){
+				karte[2][2] = ' ';
+			}else karte[2][2] = 'x';
+			
+			karte[2][3]='x';
+			}
+			
+			for (k=0; k<7; k++){
+				for (l=0; j<7; l++){
+					printf("%c", karte[i][j]);
+				}
+				printf("\n");
+			}
+		 }
+	 }
 }
 
 void freeSpielfeld(void)
