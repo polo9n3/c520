@@ -15,6 +15,15 @@ int m	= 6;
 int x_size	= 0;
 int y_size  = 0;
 
+typedef struct karte {
+	char code[4];
+	char bild[56];
+	struct karte * next;
+	struct karte * previous;
+} KARTE;
+
+int karte[7][7];
+
 void generiereSpielfeld(int x, int y);
 void fuelleSpielfeld(char code[], int xpos, int ypos);
 void zeichneSpielfeld(void);
@@ -106,13 +115,21 @@ void zeichneSpielfeld(void)
 	 int k=0;
 	 int l=0;
 	 int karte[7][7];
+	 int pups1 = 0, pups2 = 0;
 	 
+	 for(pups1=0;pups1<7;pups1++)
+	 {
+		 for(pups2=0;pups2<7;pups2++)
+		 {
+			 karte[pups1][pups2] = ' ';
+		 }
+	 }
 	 //spielfeld[4][6] = "2135";
 	 
 	 //printf("%i,%i", x_size, y_size);
 	 
-	 for (i=0; i<(x_size); i++){
-		 for (j=0; j<(y_size); j++){
+	 for (i=0; i<x_size; i++){
+		 for (j=0; j<y_size; j++){
 			 
 			 printf("Feld %i/%i=%s\n",i,j, spielfeld[i][j]);
 			 
@@ -209,16 +226,18 @@ void zeichneSpielfeld(void)
 			karte[2][3]='x';
 			}
 			
-			for (k=0; k<7; k++){
+			
+		}
+		for (k=0; k<7; k++){
 				for (l=0; l<7; l++){
 
-					printf("%c", (char)karte[i][j]);
+					printf("%c", (char)karte[k][l]);
 
 				}
 				printf("\n");
 			}
 		}
-		}
+		
 	 }
 }
 
