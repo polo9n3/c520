@@ -177,8 +177,8 @@ void zeichneSpielfeld(void)
 			}
 			
 			for (k=0; k<7; k++){
-				for (l=0; j<7; l++){
-					printf("%c", karte[i][j]);
+				for (l=0; l<7; l++){
+					printf("%c", (char)karte[i][j]);
 				}
 				printf("\n");
 			}
