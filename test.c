@@ -73,7 +73,10 @@ void fuelleSpielfeld(char code[], int xpos, int ypos)
 	if(spielfeld == NULL){
 		printf("Fehler beim Spielfeld\n");
 	}
-	strcpy(spielfeld[xpos][ypos], code);
+	spielfeld[xpos][ypos][0]=code[0];
+	spielfeld[xpos][ypos][1]=code[1];
+	spielfeld[xpos][ypos][2]=code[2];
+	spielfeld[xpos][ypos][3]=code[3];
 }
 
 void zeichneSpielfeld(void)
@@ -85,17 +88,43 @@ void zeichneSpielfeld(void)
 	 int j=0;
 	 int k=0;
 	 int l=0;
-	 char karte[7][7];
+	 int karte[7][7];
 	 
 	 //spielfeld[4][6] = "2135";
 	 
-	 printf("%i,%i", x_size, y_size);
+	 //printf("%i,%i", x_size, y_size);
 	 
 	 for (i=0; i<(x_size-1); i++){
 		 for (j=0; j<(y_size-1); j++){
 			 
-			 //Straße
+			 printf("Feld %i/%i=%s\n",i,j, spielfeld[i][j]);
 			 
+			 
+		if (spielfeld[i][j][0] != EOF){
+			
+		/*	if(spielfeld[i][j][0] == '0'){
+				karte[2][1]=' ';
+				karte[3][1]=' ';
+				karte[4][1]=' ';
+			}
+			if(spielfeld[i][j][1] == '0'){
+				karte[5][2]='+';
+				karte[5][3]='+';
+				karte[5][4]='+';
+			}
+			if(spielfeld[i][j][2] == '0'){
+				karte[3][5]='+';
+				karte[3][4]='+';
+				karte[3][3]='+';
+			}
+			if(spielfeld[i][j][3] == '0'){
+				karte[1][3]='+';
+				karte[2][3]='+';
+				karte[3][3]='+';
+			}
+			*/
+			//Straße
+			
 			 if(spielfeld[i][j][0] == '1'){
 				karte[3][1]='+';
 				karte[3][2]='+';
@@ -177,12 +206,13 @@ void zeichneSpielfeld(void)
 			}
 			
 			for (k=0; k<7; k++){
-				for (l=0; j<7; l++){
+				for (l=0; l<7; l++){
 					printf("%c", karte[i][j]);
 				}
 				printf("\n");
 			}
-		 }
+		}
+		}
 	 }
 }
 
