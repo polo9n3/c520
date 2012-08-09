@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 {
 	generiereSpielfeld(n, m);
 	fuelleSpielfeld("2110", 0, 0);
-	fuelleSpielfeld("1030", 0, 1);
+	fuelleSpielfeld("1020", 0, 1);
 	fuelleSpielfeld("2220", n-1, m-1);
 	zeichneSpielfeld();
 	freeSpielfeld();
