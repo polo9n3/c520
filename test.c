@@ -111,35 +111,22 @@ void zeichneSpielfeld(void)
 	 
 	 //printf("%i,%i", x_size, y_size);
 	 
-	 for (i=0; i<(x_size-1); i++){
-		 for (j=0; j<(y_size-1); j++){
+	 for (i=0; i<(x_size); i++){
+		 for (j=0; j<(y_size); j++){
 			 
 			 printf("Feld %i/%i=%s\n",i,j, spielfeld[i][j]);
 			 
 			 
 		if (spielfeld[i][j][0] != EOF){
 			
-		/*	if(spielfeld[i][j][0] == '0'){
-				karte[2][1]=' ';
-				karte[3][1]=' ';
-				karte[4][1]=' ';
+			if(strcmp(spielfeld[i][j], "0000")==0){
+				for (k=0; k<7; k++){
+					for (l=0; l<7; l++){
+						karte[k][l]=' ';
+					}
+				}
 			}
-			if(spielfeld[i][j][1] == '0'){
-				karte[5][2]='+';
-				karte[5][3]='+';
-				karte[5][4]='+';
-			}
-			if(spielfeld[i][j][2] == '0'){
-				karte[3][5]='+';
-				karte[3][4]='+';
-				karte[3][3]='+';
-			}
-			if(spielfeld[i][j][3] == '0'){
-				karte[1][3]='+';
-				karte[2][3]='+';
-				karte[3][3]='+';
-			}
-			*/
+			
 			//Straße
 			
 			 if(spielfeld[i][j][0] == '1'){
@@ -222,14 +209,14 @@ void zeichneSpielfeld(void)
 			karte[2][3]='x';
 			}
 			
-			/*for (k=0; k<7; k++){
+			for (k=0; k<7; k++){
 				for (l=0; l<7; l++){
 
 					printf("%c", (char)karte[i][j]);
 
 				}
 				printf("\n");
-			}*/
+			}
 		}
 		}
 	 }
