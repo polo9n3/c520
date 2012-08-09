@@ -65,6 +65,23 @@ void generiereSpielfeld(int x, int y)
 				}
 			}
 		}
+		//Alle Elemente Nullen
+		i=0;
+		j=0;
+		int s = 0;
+		for(i=0; i<x; i++)
+		{
+			if(spielfeld != NULL)
+			{
+				for(j=0; j<y; j++)
+				{
+					for(s=0; s<4; s++)
+					{
+						spielfeld[i][j][s] = '0';
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -207,7 +224,9 @@ void zeichneSpielfeld(void)
 			
 			/*for (k=0; k<7; k++){
 				for (l=0; l<7; l++){
-					printf("%c", karte[i][j]);
+
+					printf("%c", (char)karte[i][j]);
+
 				}
 				printf("\n");
 			}*/
