@@ -205,12 +205,12 @@ void zeichneSpielfeld(void)
 			karte[2][3]='x';
 			}
 			
-			for (k=0; k<7; k++){
+			/*for (k=0; k<7; k++){
 				for (l=0; l<7; l++){
 					printf("%c", karte[i][j]);
 				}
 				printf("\n");
-			}
+			}*/
 		}
 		}
 	 }
