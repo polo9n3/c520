@@ -36,6 +36,7 @@ int main(int argc, char **argv)
 	generiereSpielfeld(n, m);
 	fuelleSpielfeld("2110", 0, 0);
 	fuelleSpielfeld("1020", 0, 1);
+	fuelleSpielfeld("2101", 0, 2);
 	fuelleSpielfeld("2220", n-1, m-1);
 	zeichneSpielfeld();
 	freeSpielfeld();
@@ -117,19 +118,20 @@ void zeichneSpielfeld(void)
 	 int karte[7][7];
 	 int pups1 = 0, pups2 = 0;
 	 
-	 for(pups1=0;pups1<7;pups1++)
-	 {
-		 for(pups2=0;pups2<7;pups2++)
-		 {
-			 karte[pups1][pups2] = ' ';
-		 }
-	 }
+
 	 //spielfeld[4][6] = "2135";
 	 
 	 //printf("%i,%i", x_size, y_size);
 	 
 	 for (i=0; i<x_size; i++){
 		 for (j=0; j<y_size; j++){
+			 	 for(pups1=0;pups1<7;pups1++)
+					 {
+						 for(pups2=0;pups2<7;pups2++)
+						 {
+							 karte[pups1][pups2] = ' ';
+						 }
+					 }
 			 
 			 printf("Feld %i/%i=%s\n",i,j, spielfeld[i][j]);
 			 
@@ -226,9 +228,7 @@ void zeichneSpielfeld(void)
 			karte[2][3]='x';
 			}
 			
-			
-		}
-		for (k=0; k<7; k++){
+			for (k=0; k<7; k++){
 				for (l=0; l<7; l++){
 
 					printf("%c", (char)karte[k][l]);
@@ -237,6 +237,8 @@ void zeichneSpielfeld(void)
 				printf("\n");
 			}
 		}
+		}
+		
 		
 	 }
 }
