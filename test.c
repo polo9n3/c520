@@ -28,6 +28,8 @@ void generiereSpielfeld(int x, int y);
 void fuelleSpielfeld(char code[], int xpos, int ypos);
 void zeichneSpielfeld(void);
 void freeSpielfeld(void);
+void berechneKoordinaten(int x_koor, int y_koor, int card[7][7], int output[x_size*7][y_size*7]);
+
 
 
 
@@ -35,8 +37,15 @@ int main(int argc, char **argv)
 {
 	generiereSpielfeld(n, m);
 	fuelleSpielfeld("2110", 0, 0);
-	fuelleSpielfeld("1020", 0, 1);
+	//fuelleSpielfeld("1020", 0, 1);
 	fuelleSpielfeld("2101", 0, 2);
+	fuelleSpielfeld("2101", 0, 3);
+	fuelleSpielfeld("2101", 0, 4);
+	fuelleSpielfeld("2101", 2, 5);
+	fuelleSpielfeld("2101", 4, 0);
+	fuelleSpielfeld("2101", 3, 0);
+	fuelleSpielfeld("2101", 2, 0);
+	fuelleSpielfeld("2101", 1, 0);
 	fuelleSpielfeld("2220", n-1, m-1);
 	zeichneSpielfeld();
 	freeSpielfeld();
@@ -124,15 +133,23 @@ void zeichneSpielfeld(void)
 	 int k=0;
 	 int l=0;
 	 int karte[7][7];
+	 int ausgabe[x_size*7][y_size*7];
 	 int pups1 = 0, pups2 = 0;
 	 
 
 	 //spielfeld[4][6] = "2135";
 	 
-	 //printf("%i,%i", x_size, y_size);
+	 printf("%i,%i", x_size, y_size);
 	 
-	 for (i=0; i<x_size; i++){
+	 for (k=0; k<x_size*7; k++){
+		for (l=0; l<y_size*7; l++){
+			ausgabe[k][l] = ' ';
+		}
+	 }
+	 
+	for (i=0; i<x_size; i++){
 		 for (j=0; j<y_size; j++){
+			 
 			 	 for(pups1=0;pups1<7;pups1++)
 					 {
 						 for(pups2=0;pups2<7;pups2++)
@@ -140,8 +157,10 @@ void zeichneSpielfeld(void)
 							 karte[pups1][pups2] = ' ';
 						 }
 					 }
+					 
+	
 			 
-			 printf("Feld %i/%i=%s\n",i,j, spielfeld[i][j]);
+			 printf("Feld %i/%i=%s hinzugefügt\n",i,j, spielfeld[i][j]);
 			 
 			 
 		if (spielfeld[i][j][0] != EOF){
@@ -151,6 +170,15 @@ void zeichneSpielfeld(void)
 					for (l=0; l<7; l++){
 						karte[k][l]=' ';
 					}
+				}
+			}else{
+				for (k=0; k<7; k++){
+					karte[k][0]='-';
+					karte[k][6]='-';
+				}
+				for (k=1; k<6; k++){
+				karte[0][k]='|';
+				karte[6][k]='|';
 				}
 			}
 			
@@ -236,20 +264,55 @@ void zeichneSpielfeld(void)
 			karte[2][3]='x';
 			}
 			
-			for (k=0; k<7; k++){
-				for (l=0; l<7; l++){
-
-					printf("%c", (char)karte[l][k]);
-
-				}
-				printf("\n");
-			}
+			
+			berechneKoordinaten(i,j,karte,ausgabe);
+			
+			
 		}
 		}
 		
 		
 	 }
+	 for (k=0; k<y_size*7; k++){
+				for (l=0; l<x_size*7; l++){
+					printf("%c", (char)ausgabe[l][k]);
+				}
+				printf("\n");
+			}
 }
+
+/***********************************************************************
+ * 		Berechnet die Position jedes char im Ausgabe-Array
+ **********************************************************************/
+ void berechneKoordinaten(int x_koor, int y_koor, int card[7][7], int output[x_size*7][y_size*7])
+ {
+	 int i, j;
+	 int abzugX = 0;
+	 int abzugY = 0;
+		
+		if(x_koor>0){
+			abzugX=x_koor;
+		}
+		if(y_koor>0){
+			abzugY=y_koor;
+		}
+	 
+		 for (i=0; i<7; i++){
+			 for (j=0; j<7; j++){
+				 if (output[i+x_koor*7-abzugX][j+y_koor*7-abzugY] == '-') 
+				 {
+						card[i][j] = '-';
+				 }
+				 if (output[i+x_koor*7-abzugX][j+y_koor*7-abzugY] == '|')
+				 {
+					 card[i][j] = '|';
+				 }
+				 output[i+x_koor*7-abzugX][j+y_koor*7-abzugY]=card[i][j];
+			 }
+			 
+		 }
+		 return;
+ }
 
 /***********************************************************************
  * 		Gibt das gesamte Spielfeld frei
