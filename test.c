@@ -44,6 +44,10 @@ int main(int argc, char **argv)
 	return 0;
 }
 
+/***********************************************************************
+ * 		Reserviert den Speicher für das Spielfeld
+ **********************************************************************/
+
 void generiereSpielfeld(int x, int y)
 {
 	int i = 0;
@@ -94,6 +98,10 @@ void generiereSpielfeld(int x, int y)
 		}
 	}
 }
+
+/***********************************************************************
+ * 		Füllt das Spielfeld mit den Codes
+ **********************************************************************/
 
 void fuelleSpielfeld(char code[], int xpos, int ypos)
 {
@@ -242,6 +250,10 @@ void zeichneSpielfeld(void)
 		
 	 }
 }
+
+/***********************************************************************
+ * 		Gibt das gesamte Spielfeld frei
+ **********************************************************************/
 
 void freeSpielfeld(void)
 {

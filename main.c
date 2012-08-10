@@ -288,7 +288,7 @@ void kartenErstellen(void){
 		fclose (ausgabe);
 	
 	
-	
+	//	Und alles wieder frei geben
 	free(p);
 	
 }
@@ -327,7 +327,9 @@ void spielen(char datei[]){
 			 for (j=0; j<55; j++){
 				bild[j] = getc(eingabe);
 			 }
-			 
+/**
+ * 		Karten auf den Stack legen
+ */
 			 //printf("%s\n%s\n", code, bild);
 			 push(code, bild);
 			 
@@ -339,6 +341,10 @@ void spielen(char datei[]){
 	}
 
 }
+
+/***********************************************************************
+ * 		Push-Funktion für den Stack
+ **********************************************************************/
 
 void push(char *co, char *bi)
 {
@@ -360,6 +366,9 @@ void push(char *co, char *bi)
 	//printf("Neu in der Liste:\n%s\n", pos->bild);
 }
 
+/***********************************************************************
+ * 		Pop-Funktion für de Stack. Gibt KARTE zurück
+ **********************************************************************/
 
 KARTE * pop(void)
 {
