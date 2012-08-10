@@ -337,7 +337,7 @@ void spielen(char datei[]){
 	}
 	for (i=0; i<anzahl; i++){
 		p = pop();
-		//printf("%s\n", p->code);
+		printf("%s\n", p->code);
 	}
 
 }
@@ -381,7 +381,7 @@ KARTE * pop(void)
 		temp = pos;
 		free(pos);
 		pos = temp->next;
-		return temp;
 	}
+			return temp;
 }
 
