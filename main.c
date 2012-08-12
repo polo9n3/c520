@@ -14,38 +14,37 @@
  * 			Typdeklaration
  **********************************************************************/
 
-typedef struct karte {
+typedef struct card {
 	char code[4];
-	char bild[56];
-	struct karte * next;
-} KARTE;
+	char pic[56];
+	struct card * next;
+} CARD;
 
 
-void kartenErstellen(void);
-void spielen(char datei[]);
-void push(char *co, char *bi);
-KARTE * pop(void);
+void creatCard(void);
+void play(char file[]);
+void push(char *co, char *pic);
+CARD * pop(void);
 
 /***********************************************************************
  * 		Variablendeklaration Global			       					   *
  **********************************************************************/
-	char *startwert;
-	int anzahl;
+	char *start;
+	int number;
 	char *file;
-	KARTE *pos = NULL;
-	KARTE *next = NULL;
-	KARTE *anfang = NULL;
-	//char ***spielfeld = NULL;
+	CARD *pos = NULL;
+	CARD *next = NULL;
+	CARD *begin = NULL;
 	int x_size	= 0;
 	int y_size  = 0;
 
 
-char *** generiereSpielfeld(int x, int y);
-void fuelleSpielfeld(char code[], int xpos, int ypos, char ***feld);
-void zeichneSpielfeld(char ***feld);
-void freeSpielfeld(char ***feld);
-void berechneKoordinaten(int x_koor, int y_koor, int card[7][7], int output[x_size*7][y_size*7]);
-char *** karteEinfuegen(char *co, char ***feld);
+char *** creatField(int x, int y);
+void fillField(char code[], int xpos, int ypos, char ***field);
+void drawField(char ***field);
+void freeField(char ***field);
+void drawCard(int x_koor, int y_koor, int card[7][7], int output[x_size*7][y_size*7]);
+char *** fillInCard(char *co, char ***field);
 
 /***********************************************************************
  * 			Carcassonne
@@ -72,9 +71,8 @@ int main(int argc, char **argv){
 			
 				if(argc == 5){
 					
-					//Prüfe, ob der Key genau 9 Zeichen hat
 					if(strlen(argv[3]) == 9){
-						//Lese Parameter ein
+						//Read Parameter
 						
 						//file[] = argv[2]
 						file = malloc(sizeof(char[strlen(argv[2])]));
@@ -82,16 +80,15 @@ int main(int argc, char **argv){
 							file[i] = argv[2][i];
 						}
 						
-						//startwert[] = argv[3];
-						startwert = malloc(sizeof(char[strlen(argv[3])]));
+						start = malloc(sizeof(char[strlen(argv[3])]));
 						for(j=0; j < strlen(argv[3]); j++){
-							startwert[j] = argv[3][j];
+							start[j] = argv[3][j];
 						}
-						anzahl		= atoi(argv[4]);
+						number		= atoi(argv[4]);
 						printf("Argumente erfolgreich eingelesen!\n");
 						
-						//Erstelle Karten
-						kartenErstellen();	
+						//Creat the cards
+						creatCard();	
 						
 					}else{
 						
@@ -108,14 +105,14 @@ int main(int argc, char **argv){
 			}else if(strcmp(argv[1], "play") == 0){
 				
 				if(argc == 3){
-					//Lese Parameter ein
+					//read Parameter
 					//file[]	= argv[2];
 					file = malloc(sizeof(char[strlen(argv[2])]));
 					for(i=0; i < strlen(argv[2]); i++){
 						file[i] = argv[2][i];
 					}
 					//play
-					spielen(file);
+					play(file);
 					
 				}else{
 					
@@ -127,14 +124,14 @@ int main(int argc, char **argv){
 			
 		}else{
 			
-			//Keine Parameter übergeben
+			//No Parameter
 			printf("Es wurden keine Parameter übergeben!\n");
 			return 1;
 		
 	}
 
    free(file);
-   free(startwert);
+   free(start);
    
 	return 0;
 }
@@ -144,50 +141,50 @@ int main(int argc, char **argv){
  * 		Karten erstellen
  **********************************************************************/
   
-void kartenErstellen(void){
-	int schluesselgroesse = anzahl*4;		//Die Größe des Schlüssels
-	int *p = malloc(schluesselgroesse * sizeof(char[4]));
+void creatCard(void){
+	int keyLen = number*4;
+	int *p = malloc(keyLen * sizeof(char[4]));
 	char code[4];
-	char kette[schluesselgroesse];
-	FILE *ausgabe;
+	char chain[keyLen];
+	FILE *output;
 	int card[7][7];
 	int i,j,k;
-	for (i=0; i<schluesselgroesse; i++){
-		kette[i] = startwert[i%9];
+	for (i=0; i<keyLen; i++){
+		chain[i] = start[i%9];
 	}
 
-	for (i=0; i<schluesselgroesse; i++){
+	for (i=0; i<keyLen; i++){
 		
-			if (kette[i] == '0' || kette[i] == '1' || kette[i] == '2'){
+			if (chain[i] == '0' || chain[i] == '1' || chain[i] == '2'){
 				p[i]='0';
 			}
-			else if (kette[i] == '3' || kette[i] == '4' || kette[i] == '5' || kette[i] == '6'){
+			else if (chain[i] == '3' || chain[i] == '4' || chain[i] == '5' || chain[i] == '6'){
 				p[i]='1';
 			}
-			else if (kette[i] == '7' || kette[i] == '8' || kette[i] == '9'){
+			else if (chain[i] == '7' || chain[i] == '8' || chain[i] == '9'){
 				p[i]='2';
 			}
 			
 	}
 
-		ausgabe = fopen (file, "w");
-		if (ausgabe == NULL){
+		output = fopen (file, "w");
+		if (output == NULL){
 			printf("Fehler beim öffnen der Datei.\n");
 			exit(0);
 		}
 
 		
-	for (i=0; i<schluesselgroesse; i+=4){
+	for (i=0; i<keyLen; i+=4){
 		
 		
-		fprintf (ausgabe, "Code:");
+		fprintf (output, "Code:");
 		
 		for(j=0; j<4; j++){
 				code[j]=p[i+j];
 		}
-		fprintf (ausgabe, "%s\n", code);
+		fprintf (output, "%s\n", code);
 		
-//		Karten Zeichenen
+//		Draw Card
 		
 		for (j=0; j<7; j++){
 			for (k=0; k<7; k++){
@@ -224,7 +221,7 @@ void kartenErstellen(void){
 				card[3][3]='+';
 			}
 		
-		//Stadt
+		//City
 		
 		if(code[0] == '2'){
 				card[1][1]='x';
@@ -285,9 +282,9 @@ void kartenErstellen(void){
 		
 		for (j=0; j<7; j++){
 			for (k=0; k<7; k++){
-				fprintf (ausgabe, "%c", card[k][j]);
+				fprintf (output, "%c", card[k][j]);
 			}
-			fprintf (ausgabe, "\n");
+			fprintf (output, "\n");
 		}
 		
 		
@@ -295,73 +292,64 @@ void kartenErstellen(void){
 	}
 	
 		printf("Die Karten wurden in %s gespeichert.\n", file);
-		fclose (ausgabe);
+		fclose (output);
 	
 	
-	//	Und alles wieder frei geben
+	//	free everything
 	free(p);
 	
 }
 /***********************************************************************
- * 				Das Spiel
+ * 				The Game
  **********************************************************************/
 
-void spielen(char datei[]){
-	FILE *eingabe;
+void play(char file[]){
+	FILE *input;
 	char code[4];
-	char bild[56];
+	char pic[56];
 	int i,j;
 	
-	eingabe = fopen(datei, "r");
+	input = fopen(file, "r");
 	
 	char c;
-	int zeilenanzahl=1;
-	while ((c=getc(eingabe))!=EOF)
-	if (c=='\n') {zeilenanzahl++;}
+	int lineNumber=1;
+	while ((c=getc(input))!=EOF)
+	if (c=='\n') {lineNumber++;}
 	
-	anzahl = (int)zeilenanzahl/8;
+	number = (int)lineNumber/8;
 	
-	KARTE *p;
-	char ***feld;
+	CARD *p;
+	char ***field;
 	
 	
-	for (i=0; i<anzahl; i++){
-		 fseek(eingabe,(long) 5+i*66, SEEK_SET);
+	for (i=0; i<number; i++){
+		 fseek(input,(long) 5+i*66, SEEK_SET);
 		 
-			 code[0] = getc(eingabe);
-			 code[1] = getc(eingabe);
-			 code[2] = getc(eingabe);
-			 code[3] = getc(eingabe);
+			 code[0] = getc(input);
+			 code[1] = getc(input);
+			 code[2] = getc(input);
+			 code[3] = getc(input);
 			 code[4] = '\0';
 			 
 			 
-			 fseek(eingabe,(long) 10+i*66, SEEK_SET);
+			 fseek(input,(long) 10+i*66, SEEK_SET);
 			 
 			 for (j=0; j<55; j++){
-				bild[j] = getc(eingabe);
+				pic[j] = getc(input);
 			 }
 /**
- * 		Karten auf den Stack legen
+ * 		Put Cards on Stack
  */
-			 //printf("%s\n%s\n", code, bild);
-			 push(code, bild);
+			 push(code, pic);
 	}
 	
 
-//	
-//	Hier muss noch unsere Überprüfung hin, wo die neue Karte hin gelegt werden soll
-//	und gegebenenfalls das alte Array in das neue Übertragen werden
-//
 
-/**
- * 		Legen der Startkarte
- */
-
-		feld = generiereSpielfeld(1, 1);
-		fuelleSpielfeld("2101", 0, 0, feld);
-		zeichneSpielfeld(feld);
+		field = creatField(1, 1);
+		fillField("2101", 0, 0, field);
+		drawField(field);
 		
-	for (i=0; i<anzahl; i++){
+	for (i=0; i<number; i++){
 
 
 		p = pop();
@@ -375,29 +363,29 @@ void spielen(char datei[]){
 		//printf("Nach:%s\n", code);
 		
 
-		//feld = karteEinfuegen(p->code, feld);
-		//feld = generiereSpielfeld(1, 1);
-		fuelleSpielfeld(code, 0, 0, feld);
-		zeichneSpielfeld(feld);
+		//field = fillInCard(p->code, feld);
+		//field = creatField(1, 1);
+		fillField(code, 0, 0, field);
+		drawField(field);
 		
 	}
 	
-	freeSpielfeld(feld);
+	freeField(field);
 }
 
 /***********************************************************************
- * 		Push-Funktion für den Stack
+ * 		Push-Funktion of the Stack
  **********************************************************************/
 
-void push(char *co, char *bi)
+void push(char *co, char *pi)
 {
-	if (anfang == NULL){
-		anfang = (KARTE *) malloc(sizeof(KARTE));
-		pos = anfang;
+	if (begin == NULL){
+		begin = (CARD *) malloc(sizeof(CARD));
+		pos = begin;
 		pos->next = NULL;
 	}else{
 		next = pos;
-		pos = (KARTE *) malloc(sizeof(KARTE));
+		pos = (CARD *) malloc(sizeof(CARD));
 		pos->next = next;
 	}
 	if (pos == NULL) {
@@ -405,21 +393,19 @@ void push(char *co, char *bi)
 		exit(0);
 	}
 	strcpy(pos->code, co);
-	//printf("Neu in der Liste:%s\n", pos->code);
-	strcpy(pos->bild, bi);
-	//printf("Neu in der Liste:\n%s\n", pos->bild);
+	strcpy(pos->pic, pi);
 }
 
 /***********************************************************************
- * 		Pop-Funktion für de Stack. Gibt KARTE zurück
+ * 		Pop-Funktion of the Stack. Return CARD
  **********************************************************************/
 
-KARTE * pop(void){
+CARD * pop(void){
 	
-	KARTE * temp = NULL;
+	CARD * temp = NULL;
 	//printf("Hole eine karte vom Stack\n");
 	
-    if (anfang == NULL){
+    if (begin == NULL){
 		printf("Die Liste ist Leer");
 	}
 	else{
@@ -434,19 +420,19 @@ KARTE * pop(void){
 
 
 /***********************************************************************
- * 		Reserviert den Speicher für das Spielfeld
+ * 		creats a new empty Field
  **********************************************************************/
 
-char *** generiereSpielfeld(int x, int y)
+char *** creatField(int x, int y)
 {
 	int i = 0;
 	int j = 0;
 	x_size	= x;
 	y_size	= y;
-	char ***spielfeld;
-	//Versuche Speicher für Spielfeld zu reservieren
-	spielfeld	= malloc((x_size)*sizeof(char*));
-	if(spielfeld == NULL) 
+	char ***field;
+	//Versuche Speicher für field zu reservieren
+	field	= malloc((x_size)*sizeof(char*));
+	if(field == NULL) 
 	{
 		//Falls kein Speicher reserviert werden konnte, gebe Meldung aus und breche das Programm sofort ab
 		printf("Es konnte nicht genug Speicher für das Spielfeld reserviert werden!\n");
@@ -455,8 +441,8 @@ char *** generiereSpielfeld(int x, int y)
 	{
 		for(i=0; i<x_size; i++)
 		{
-			spielfeld[i]	= malloc((y_size)*sizeof(char*));
-			if(spielfeld[i] == NULL)
+			field[i]	= malloc((y_size)*sizeof(char*));
+			if(field[i] == NULL)
 			{
 				//Falls kein Speicher reserviert werden konnte, gib Meldung aus und breche das Programm sofort ab
 				printf("Es konnte nicht genug Speicher für das Spielfeld reserviert werden!\n");
@@ -465,7 +451,7 @@ char *** generiereSpielfeld(int x, int y)
 			{
 				for(j=0; j<y_size; j++)
 				{
-					spielfeld[i][j] = malloc(sizeof(char[4]));
+					field[i][j] = malloc(sizeof(char[4]));
 				}
 			}
 		}
@@ -474,84 +460,82 @@ char *** generiereSpielfeld(int x, int y)
 		j=0;
 		for(i=0; i<x_size; i++)
 		{
-			if(spielfeld != NULL)
+			if(field != NULL)
 			{
 				for(j=0; j<y_size; j++)
 				{
-					spielfeld[i][j][0] = '0';
-					spielfeld[i][j][1] = '0';
-					spielfeld[i][j][2] = '0';
-					spielfeld[i][j][3] = '0';
-					spielfeld[i][j][4] = '\0';
+					field[i][j][0] = '0';
+					field[i][j][1] = '0';
+					field[i][j][2] = '0';
+					field[i][j][3] = '0';
+					field[i][j][4] = '\0';
 				}
 			}
 		}
 	}
-	//zeichneSpielfeld(spielfeld);
-	return spielfeld;
+	return field;
 }
 
 /***********************************************************************
- * 		Füllt das Spielfeld mit den Codes
+ * 		Fill field with codes
  **********************************************************************/
 
-void fuelleSpielfeld(char code[4], int xpos, int ypos, char ***feld)
+void fillField(char code[4], int xpos, int ypos, char ***field)
 {
 
 	
-	if(feld == NULL){
+	if(field == NULL){
 		printf("Fehler beim Spielfeld\n");
 		exit(0);
 	}
-	feld[xpos][ypos][0]=code[0];
-	feld[xpos][ypos][1]=code[1];
-	feld[xpos][ypos][2]=code[2];
-	feld[xpos][ypos][3]=code[3];
-	feld[xpos][ypos][4]='\0';
+	field[xpos][ypos][0]=code[0];
+	field[xpos][ypos][1]=code[1];
+	field[xpos][ypos][2]=code[2];
+	field[xpos][ypos][3]=code[3];
+	field[xpos][ypos][4]='\0';
 	
 }
 
-void zeichneSpielfeld(char ***feld)
+void drawField(char ***field)
 {
 	/*
-	 * Hier wird dann das Spielfeld gezeichnet
+	 * drawing the field
 	 */
 	 int i=0;
 	 int j=0;
 	 int k=0;
 	 int l=0;
 	 int card[7][7];
-	 int ausgabe[x_size*7][y_size*7];
-	 int pups1 = 0, pups2 = 0;
+	 int output[x_size*7][y_size*7];
+	 int a1 = 0, a2 = 0;
 	 
 	 
-	 //printf("%i,%i", x_size, y_size);
 	 
 	 for (k=0; k<x_size*7; k++){
 		for (l=0; l<y_size*7; l++){
-			ausgabe[k][l] = ' ';
+			output[k][l] = ' ';
 		}
 	 }
 	 
 	for (i=0; i<x_size; i++){
 		 for (j=0; j<y_size; j++){
 			 
-			 	 for(pups1=0;pups1<7;pups1++)
+			 	 for(a1=0;a1<7;a1++)
 					 {
-						 for(pups2=0;pups2<7;pups2++)
+						 for(a2=0;a2<7;a2++)
 						 {
-							 card[pups1][pups2] = ' ';
+							 card[a1][a2] = ' ';
 						 }
 					 }
 					 
 	
 			 
-			 printf("Feld %i/%i=%s hinzugefügt\n",i,j, feld[i][j]);
+			 printf("Feld %i/%i=%s hinzugefügt\n",i,j, field[i][j]);
 			 
 			 
-		if (feld[i][j][0] != EOF){
+		if (field[i][j][0] != EOF){
 			
-			if(strcmp(feld[i][j], "0000")==0){
+			if(strcmp(field[i][j], "0000")==0){
 				for (k=0; k<7; k++){
 					for (l=0; l<7; l++){
 						card[k][l]=' ';
@@ -568,32 +552,32 @@ void zeichneSpielfeld(char ***feld)
 				}
 			}
 			
-			//Straße
+			//Street
 			
-			 if(feld[i][j][0] == '1'){
+			 if(field[i][j][0] == '1'){
 				card[3][1]='+';
 				card[3][2]='+';
 				card[3][3]='+';
 			}
-			if(feld[i][j][1] == '1'){
+			if(field[i][j][1] == '1'){
 				card[5][3]='+';
 				card[4][3]='+';
 				card[3][3]='+';
 			}
-			if(feld[i][j][2] == '1'){
+			if(field[i][j][2] == '1'){
 				card[3][5]='+';
 				card[3][4]='+';
 				card[3][3]='+';
 			}
-			if(feld[i][j][3] == '1'){
+			if(field[i][j][3] == '1'){
 				card[1][3]='+';
 				card[2][3]='+';
 				card[3][3]='+';
 			}
 			
-			//Stadt
+			//City
 			
-			if(feld[i][j][0] == '2'){
+			if(field[i][j][0] == '2'){
 				card[1][1]='x';
 				card[2][2]='x';
 				card[3][2]='x';
@@ -601,7 +585,7 @@ void zeichneSpielfeld(char ***feld)
 				card[5][1]='x';
 			}
 			
-		if(feld[i][j][1] == '2'){
+		if(field[i][j][1] == '2'){
 			if(card[5][1] == 'x'){
 				card[5][1] = ' ';
 			}else card[5][1] = 'x';
@@ -616,7 +600,7 @@ void zeichneSpielfeld(char ***feld)
 
 			}
 			
-		if(feld[i][j][2] == '2'){
+		if(field[i][j][2] == '2'){
 			if(card[5][5] == 'x'){
 				card[5][5] = ' ';
 			}else card[5][5] = 'x';
@@ -630,7 +614,7 @@ void zeichneSpielfeld(char ***feld)
 			card[1][5]='x';
 			}
 			
-		if(feld[i][j][3] == '2'){
+		if(field[i][j][3] == '2'){
 			if(card[1][5] == 'x'){
 				card[1][5] = ' ';
 			}else card[1][5] = 'x';
@@ -651,7 +635,7 @@ void zeichneSpielfeld(char ***feld)
 			}
 			
 			
-			berechneKoordinaten(i,j,card,ausgabe);
+			drawCard(i,j,card,output);
 			
 			
 		}
@@ -661,7 +645,7 @@ void zeichneSpielfeld(char ***feld)
 	 }
 	 for (k=0; k<y_size*7; k++){
 				for (l=0; l<x_size*7; l++){
-					printf("%c", (char)ausgabe[l][k]);
+					printf("%c", (char)output[l][k]);
 				}
 				printf("\n");
 			}
@@ -670,30 +654,30 @@ void zeichneSpielfeld(char ***feld)
 /***********************************************************************
  * 		Berechnet die Position jedes char im Ausgabe-Array
  **********************************************************************/
- void berechneKoordinaten(int x_koor, int y_koor, int card[7][7], int output[x_size*7][y_size*7])
+ void drawCard(int x_koor, int y_koor, int card[7][7], int output[x_size*7][y_size*7])
  {
 	 int i, j;
-	 int abzugX = 0;
-	 int abzugY = 0;
+	 int minusX = 0;
+	 int minusY = 0;
 		
 		if(x_koor>0){
-			abzugX=x_koor;
+			minusX=x_koor;
 		}
 		if(y_koor>0){
-			abzugY=y_koor;
+			minusY=y_koor;
 		}
 	 
 		 for (i=0; i<7; i++){
 			 for (j=0; j<7; j++){
-				 if (output[i+x_koor*7-abzugX][j+y_koor*7-abzugY] == '-') 
+				 if (output[i+x_koor*7-minusX][j+y_koor*7-minusY] == '-') 
 				 {
 						card[i][j] = '-';
 				 }
-				 if (output[i+x_koor*7-abzugX][j+y_koor*7-abzugY] == '|')
+				 if (output[i+x_koor*7-minusX][j+y_koor*7-minusY] == '|')
 				 {
 					 card[i][j] = '|';
 				 }
-				 output[i+x_koor*7-abzugX][j+y_koor*7-abzugY]=card[i][j];
+				 output[i+x_koor*7-minusX][j+y_koor*7-minusY]=card[i][j];
 			 }
 			 
 		 }
@@ -704,66 +688,66 @@ void zeichneSpielfeld(char ***feld)
  * 		Berechnet die Position der nächsten Karte
  *********************************************************************/
 
-char *** karteEinfuegen(char *co, char ***feld)
+char *** fillInCard(char *co, char ***field)
 {
 	int i,j,k;
-	int breite = y_size+2;
-	int hoehe = x_size+2;
-	char ***ausgabe;
-	char ***feldGross = generiereSpielfeld(hoehe,breite);
+	int width = y_size+2;	
+	int higth = x_size+2;
+	char ***output;
+	char ***fieldBig = creatField(higth,width);
 
 	for(i=0; i<x_size; i++){
 		for(j=0; j<y_size; j++){
-			feldGross[i+1][j+1]=feld[i][j];
+			fieldBig[i+1][j+1]=field[i][j];
 		}
 	}
 
-	ausgabe = feldGross;
+	output = fieldBig;
 	
 /**
- * 	Wenn eine Reihe nicht genutzt wird, wird sie gelöscht
+ * 	delete empty rows
  */
 	j=0;
-	for(i=0; i<breite; i++){
-		if(strcmp(feldGross[0][i],"3333") != 0){
+	for(i=0; i<width; i++){
+		if(strcmp(fieldBig[0][i],"3333") != 0){
 			j++;
 		}
 	}
 	k=0;
-	for(i=0; i<hoehe; i++){
-		if(strcmp(feldGross[i][0],"3333") != 0){
+	for(i=0; i<higth; i++){
+		if(strcmp(fieldBig[i][0],"3333") != 0){
 			k++;
 		}
 	}
 	if (j==0){	
-		hoehe-=1;
-		char ***feldKleiner = generiereSpielfeld(hoehe,breite);	
+		higth-=1;
+		char ***fieldSmall = creatField(higth,width);	
 		for(i=0; i<x_size+2; i++){
 			for(j=1; j<y_size+2; j++){
-				//feldKleiner[i][j-1]=feldGross[i][j];
+				//fieldSmall[i][j-1]=fieldBig[i][j];
 			}
 		}
-			ausgabe = feldKleiner;
+			output = fieldSmall;
 	}
 	if (k==0){	
-		breite-=1;
-		char ***feldKleiner = generiereSpielfeld(hoehe,breite);	
-		for(i=0; i<breite; i++){
-			for(j=0; j<hoehe; j++){
-				//feldKleiner[i][j]=feldGross[i+1][j];
+		width-=1;
+		char ***fieldSmall = creatField(higth,width);	
+		for(i=0; i<width; i++){
+			for(j=0; j<higth; j++){
+				//fieldSmall[i][j]=fieldBig[i+1][j];
 			}
 		}
-			ausgabe = feldKleiner;
+			output = fieldSmall;
 	}	
 
-	return ausgabe;
+	return output;
 }
 
 /***********************************************************************
- * 		Gibt das gesamte Spielfeld frei
+ * 		free the field
  **********************************************************************/
 
-void freeSpielfeld(char ***feld)
+void freeField(char ***field)
 {
 	int k = 0;
 	int p = 0;
@@ -771,10 +755,10 @@ void freeSpielfeld(char ***feld)
 	{
 		for(p=0; p<(y_size-1); p++)
 		{
-			free(feld[k][p]);
+			free(field[k][p]);
 		}
-		free(feld[k]);
+		free(field[k]);
 	}
-	free(feld);
+	free(field);
 }
 
